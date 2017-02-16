@@ -15,12 +15,12 @@ print('''
 Если требуется обработать подготовленные другим путём HaploReg-таблицы, пишите в Issues.
 ''')
 
-import os
-import re
-
 sourcefile_path = input('Путь к исходному файлу (не забывать экранировать): ')
 skip_querysnp = input('Чтобы не записывать в конечные файлы запрашиваемые SNP, введите skip: ')
 targetdir_path = input('Путь к папке с конечными chr-подпапками (не забывать экранировать): ')
+
+import os
+import re
 
 with open(sourcefile_path) as sourcefile_open:
         sourcelist = list(sourcefile_open)
