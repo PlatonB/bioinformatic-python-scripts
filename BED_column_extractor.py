@@ -25,6 +25,9 @@ import csv
 sourcefiles = os.listdir(sourcedir)
 
 for sourcefile in sourcefiles:
+        
+        #Из исходного файла вытаскиваем таблицу, т.е., с точки зрения Python, список списков её "ячеек":
+        #[['яч. 1 стр., 1 стол.', 'яч. 1 стр., 2 стол.', 'яч. 1 стр., 3 стол.'], ['яч. 2 стр., 1 стол.', 'яч. 2 стр., 2 стол.', 'яч. 2 стр., 3 стол.']]
         s = open(os.path.join(sourcedir, sourcefile))
         sourcetable = list(csv.reader(s, delimiter = '\t'))
         s.close()
