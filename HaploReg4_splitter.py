@@ -3,6 +3,8 @@ print('''
 Начало каждой подтаблицы - Query SNP <...>.
 Автор: Платон Быкадоров, 2017.
 Лицензия: GNU General Public License version 3.
+Поддержать проект: https://money.yandex.ru/to/41001832285976
+
 Получение читаемой скриптом исходной таблицы в HaploReg 4.x (http://archive.broadinstitute.org/mammals/haploreg/haploreg.php):
 
 1. Build Query --> Обзор... --> загружаете список идентификаторов вида rs1234567890, каждый на отдельной строке.
