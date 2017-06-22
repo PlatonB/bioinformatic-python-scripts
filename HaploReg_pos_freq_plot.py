@@ -68,7 +68,6 @@ def create_chart(x_pos, y_afr, y_amr, y_asn, y_eur, x_label, y_label, sourcefile
         plt.close()
 
 sourcefiles = os.listdir(sourcedir)
-
 for sourcefile in sourcefiles:
         s = open(os.path.join(sourcedir, sourcefile))
         sourcelist = list(s)
