@@ -74,11 +74,11 @@ class GTExTable(AnyTable):
                 При наличии шапки - её временный вынос из таблицы.
                 '''
                 if self.two_dim[0][0].find('gene_id') != -1:
-                        gtex_header = '\t'.join(self.two_dim[0])
+                        two_dim_header = '\t'.join(self.two_dim[0])
                         two_dim_wo_header = self.two_dim[1:]
                 else:
                         two_dim_wo_header = self.two_dim
-                return two_dim_wo_header
+                return two_dim_header, two_dim_wo_header
 
         def dict_create(self):
                 '''
@@ -136,7 +136,7 @@ gtex_rs_col_index = rs_col_index_search(gtex_two_dim)
 
 #Сохранение хэдера GTEx-таблицы в переменную.
 gtex_table = GTExTable(gtex_two_dim, gtex_rs_col_index)
-gtex_two_dim_wo_header = gtex_table.header_save()
+gtex_header, gtex_two_dim_wo_header = gtex_table.header_save()
 
 #Удаление строк GTEx-таблицы, содержащих точку вместо refSNPID, удаление дублей строк и сортировка очищенной GTEx-таблицы.
 gtex_table_wo_header = AnyTable(gtex_two_dim_wo_header, gtex_rs_col_index)
