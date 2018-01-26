@@ -71,9 +71,9 @@ class AnyTable():
                 '''
                 Удаление строк таблицы, содержащих точку или какую-нибудь другую информацию вместо refSNPID.
                 Если вам вдруг эти строки требуется учитывать, пишите в Issues, подумаю.
-                Сортировка таблицы по столбцу с refSNPID, чтобы строки с одним и тем же refSNPID расположились друг за другом.
+                Сортировка таблицы по столбцу с refSNPID, чтобы строки с одним и тем же refSNPID расположились рядом друг с другом.
                 '''
-                two_dim_unique = [line.split('\t') for line in list(set(['\t'.join(row) for row in self.two_dim]))]
+                two_dim_unique = [line.split('\t') for line in set(['\t'.join(row) for row in self.two_dim])]
                 two_dim_pure = [row for row in two_dim_unique if re.search(r'rs\d+$', row[self.rs_col_index]) != None]
                 two_dim_pure.sort(key = lambda row: row[self.rs_col_index])
                 return two_dim_pure
@@ -116,8 +116,10 @@ class BaseTable(AnyTable):
                 служащий значением этому refSNPID-ключу, и будет представлять собой единственный вложенный список.
                 Если же встречается несколько строк подряд с одним и тем же refSNPID,
                 добавляем их в качестве элементов двумерного массива, являющегося значением "общему" refSNPID-ключу.
+                Чтобы алгоритм выявления одинаковых refSNPID работал и в самом начале формирования словаря,
+                первая пара ключ-значение создаётся отдельно.
                 '''
-                rs_and_ann_dict = {self.two_dim[0][self.rs_col_index]: self.two_dim[0]}
+                rs_and_ann_dict = {self.two_dim[0][self.rs_col_index]: [self.two_dim[0]]}
                 for row_num in range(1, len(self.two_dim)):
                         if self.two_dim[row_num][self.rs_col_index] != self.two_dim[row_num - 1][self.rs_col_index]:
                                 rs_and_ann_dict[self.two_dim[row_num][self.rs_col_index]] = [self.two_dim[row_num]]
