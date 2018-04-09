@@ -37,6 +37,8 @@ for sourcefile in sourcefiles:
                 if row[0].find('#') != -1 or row[0].find('track name=') != -1:
                         header = row[0]
                         continue
+                else:
+                        header = None
                 bedrow = []
                 for number in columnlist:
                         bedrow.append(row[number - 1])
