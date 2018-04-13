@@ -1,6 +1,6 @@
 print('''
-Этот Python3-скрипт копирует в отдельный (-ые) файл (-ы) необходимые пользователю столбцы одной или нескольких BED-таблиц.
-Автор: Платон Быкадоров, 2017.
+Этот Python3-скрипт копирует в отдельные файлы необходимые пользователю столбцы BED-таблиц.
+Автор: Платон Быкадоров, 2017-2018.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -15,39 +15,33 @@ chr6 (или 6)	32665244	32665245	(опционально) дополнител�
 В исходной папке не должно находиться ничего, кроме BED-файлов, с которыми будет работать скрипт.
 ''')
 
-sourcedir = input('Путь к папке с исходными файлами (не забывать экранировать): ')
-columnlist = [int(number) for number in input('Номер одного столбца или номера нескольких столбцов через пробел: ').split()]
-targetdir = input('Путь к папке с конечными файлами (не забывать экранировать): ')
+source_dir = input('Путь к папке с исходными файлами: ')
+columns_numbers = input('Номер одного столбца или номера нескольких столбцов через пробел: ').split()
+target_dir = input('Путь к папке с конечными файлами: ')
 
 import os
 import csv
 
-sourcefiles = os.listdir(sourcedir)
+source_files = os.listdir(source_dir)
+for source_file in source_files:
+        with open(os.path.join(source_dir, source_file)) as sf_opened:
 
-for sourcefile in sourcefiles:
-        
-        #Из исходного файла вытаскиваем таблицу, т.е., с точки зрения Python, двумерный массив (список списков) её "ячеек":
-        #[['яч. 1 стр., 1 стол.', 'яч. 1 стр., 2 стол.', 'яч. 1 стр., 3 стол.'], ['яч. 2 стр., 1 стол.', 'яч. 2 стр., 2 стол.', 'яч. 2 стр., 3 стол.']]
-        s = open(os.path.join(sourcedir, sourcefile))
-        sourcetable = list(csv.reader(s, delimiter = '\t'))
-        s.close()
+                #Создание двумерного массива по данным из исходной таблицы.
+                two_dim = list(csv.reader(sf_opened, delimiter = '\t'))
 
-        bed = []
-        for row in sourcetable:
-                if row[0].find('#') != -1 or row[0].find('track name=') != -1:
-                        header = row[0]
-                        continue
+                #Обработка хэдэра.
+                if two_dim[0][0].find('#') != -1 or two_dim[0][0].find('track name=') != -1:
+                        header = two_dim[0][0]
                 else:
-                        header = None
-                bedrow = []
-                for number in columnlist:
-                        bedrow.append(row[number - 1])
-                bed.append('\t'.join(bedrow))
+                        print('Ошибка. В файле ' + source_file + ' отсутствует или неправильно оформлен хэдер.')
+                        break
 
-        targetfile = sourcefile.split('.')[0] + '_' + 'col' + '_'.join([str(number) for number in columnlist]) + '.txt'
-        t = open(os.path.join(targetdir, targetfile), 'w')
-        if header != None:
-                t.write(header + '\n')
-        for line in bed:
-                t.write(line + '\n')
-        t.close()
+                #Создание конечного двумерного массива, содержащего только запрашиваемые "столбцы".
+                trun_two_dim = [[row[int(column_number) - 1] for column_number in columns_numbers] for row in two_dim[1:]]
+                                
+                #Формирование конечного файла.
+                target_file = source_file.split('.')[0] + '_' + 'col' + '_'.join(columns_numbers) + '.txt'
+                with open(os.path.join(target_dir, target_file), 'w') as tf_opened:
+                        tf_opened.write(header + '\n')
+                        for row in trun_two_dim:
+                                tf_opened.write('\t'.join(row) + '\n')
