@@ -16,5 +16,5 @@ source_file = input('Путь к исходному файлу (не забыв�
 str_quan = int(input('Количество выводимых строк: '))
 with open(source_file) as source_file_op:
         for num in range(str_quan):
-                line = source_file_op.readline()
+                line = source_file_op.readline().split('\n')[0]
                 print(line)
