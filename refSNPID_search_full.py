@@ -208,7 +208,10 @@ def rs_search(two_dim, two_dim_rs_col_index, rs_and_ann_dict, rs_alr_found):
         '''
         out_two_dim = []
         for row in two_dim:
-                rs_id = row[two_dim_rs_col_index]
+                try:
+                        rs_id = row[two_dim_rs_col_index]
+                except IndexError:
+                        continue
                 if rs_id not in rs_alr_found:
                         if rs_id in rs_and_ann_dict:
                                 out_two_dim += rs_and_ann_dict[rs_id]
