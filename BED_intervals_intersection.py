@@ -328,9 +328,7 @@ for us_file_name in us_file_names:
                 continue
 
         #Сортировка.
-        int_core.results.sort(key = lambda row: [int(re.search(r'\d+', row[0]).group()),
-                                                 re.split(r'\d+', row[0])[1],
-                                                 *row[1:]])
+        int_core.results.sort()
 
         #Прописываем результаты в конечный файл.
         trg_file_name = '[' + us_file_name.split('.')[0] + '_I_' \
