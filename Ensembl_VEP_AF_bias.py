@@ -1,11 +1,15 @@
 print('''
 Python3-скрипт, фильтрующий строки таблиц Ensembl VEP по границам частот SNP в популяциях.
-Автор: Платон Быкадоров, 2018.
+Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
+Версия: V1.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
-На вход подаётся таблица SNP, проаннотированных в Ensembl Variant Effect Predictor (VEP)
-с флагом, выводящим частоты их встречаемости в различных популяциях.
+На вход подаются таблицы SNP, проаннотированных в
+Ensembl Variant Effect Predictor (VEP) с флагом --af_1kg, выводящим
+частоты их встречаемости в различных популяциях, и с флагом --tab.
+В таблицах обязательно наличие шапки, т.е. при
+их генерации нельзя использовать --no_headers.
 При запуске скрипта вы должны указать одну или несколько
 популяций и пороги частот SNP в этих популяциях.
 Скрипт отсечёт SNP, выходящие хотя бы за один из указанных вами порогов.
@@ -28,8 +32,7 @@ def pop_col_index_search(req_population):
 import os
 import re
 
-src_dir_path = input('Путь к папке с исходными файлами: ')
-trg_dir_path = input('Путь к папке для конечных файлов: ')
+src_dir_path = input('Путь к папке с исходными tab-файлами: ')
 req_populations = input('''Отсечь SNP по частотам в следующих популяциях
 [AFR_AF|AMR_AF|EAS_AF|EUR_AF|SAS_AF|AA_AF|EA_AF] (несколько - через пробел): ''').split()
 
@@ -46,13 +49,17 @@ freq_thresholds = ' and '.join(['float(row[{}]) ' + \
                         input('Граница частоты в популяции ' + req_population + ' [<= 0.03|> 0.3|(...)]: ') \
                         for req_population in req_populations])
 
+trg_dir_path = input('Путь к папке для конечных файлов: ')
 src_file_names = os.listdir(src_dir_path)
 for src_file_name in src_file_names:
         with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
 
+                #Игнорирование хэдеров, начинающихся с ##.
                 #Преобразование шапки Ensembl VEP-таблицы в список.
-                first_row = src_file_opened.readline().split('\t')
-
+                first_row = ['##']
+                while first_row[0].startswith('##') == True:
+                        first_row = src_file_opened.readline().split('\n')[0].split('\t')
+                        
                 #Создание списка индексов запрашиваемых популяционных столбцов.
                 req_pop_col_indices = list(map(pop_col_index_search, req_populations))
                 
@@ -82,3 +89,8 @@ for src_file_name in src_file_names:
                 trg_file_opened.write('\t'.join(first_row))
                 for row in filtered_rows:
                         trg_file_opened.write('\t'.join(row))
+
+'''
+Пример команды, формирующей минималистичные таблицы, поддерживаемые биас-скриптом:
+./vep --cache --fork 8 --no_stats --tab --species homo_sapiens --af_1kg --fields "Location,Uploaded_variation,AFR_AF,EAS_AF,EUR_AF" -i input.txt -o output.txt
+'''
