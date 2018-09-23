@@ -114,9 +114,9 @@ for src_file_name in src_file_names:
                         with open(trg_file_path, 'w') as trg_file_opened:
                                 if trg_file_format == 'json':
                                         
-                                        #Полученный список словарей пропишется в JSON-файл
-                                        #с формированием отступов и сортировкой ключей.
-                                        json.dump(linked_snps_n_specs, trg_file_opened, indent=4, sort_keys=True)
+                                        #Полученный список словарей пропишется
+                                        #в JSON-файл с формированием отступов.
+                                        json.dump(linked_snps_n_specs, trg_file_opened, indent=4)
 
                                 elif trg_file_format == 'tsv':
                                         
