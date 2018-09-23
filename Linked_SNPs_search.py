@@ -55,11 +55,11 @@ pop_name = input('''\nПопуляция из 1000 Genomes
 ld_measure = input('''\nМера неравновесия сцепления (LD)
 [r2|d_prime]: ''')
 ld_value = float(input('\n{} >= '.format(ld_measure)))
-trg_format = input('''\nФормат конечных файлов
+trg_file_format = input('''\nФормат конечных файлов
 (игнорирование ввода ==> json)
 [json|tsv]: ''')
-if trg_format == '':
-        trg_format = 'json'
+if trg_file_format == '':
+        trg_file_format = 'json'
 
 #Первичный шаблон запроса к API и его заполнение
 #общими для всех запрашиваемых SNPs данными.
@@ -92,7 +92,7 @@ for src_file_name in src_file_names:
                         
                         #Формирование имени конечного файла и пути к нему.
                         trg_file_name = rs_id + '_' + pop_name.split(':')[-1] + '_' \
-                                        + ld_measure + '_' + str(ld_value) + '.' + trg_format
+                                        + ld_measure + '_' + str(ld_value) + '.' + trg_file_format
                         trg_file_path = os.path.join(trg_dir_path, trg_file_name)
                         
                         #Если в исходном наборе определённый SNP встретился
@@ -112,13 +112,13 @@ for src_file_name in src_file_names:
                         #Создание конечного файла того
                         #формата, который выбрал пользователь.
                         with open(trg_file_path, 'w') as trg_file_opened:
-                                if trg_format == 'json':
+                                if trg_file_format == 'json':
                                         
                                         #Полученный список словарей пропишется в JSON-файл
                                         #с формированием отступов и сортировкой ключей.
                                         json.dump(linked_snps_n_specs, trg_file_opened, indent=4, sort_keys=True)
 
-                                elif trg_format == 'tsv':
+                                elif trg_file_format == 'tsv':
                                         
                                         #От словаря к словарю энсембловского списка набор ключей идентичен.
                                         #Поэтому хэдер TSV-таблицы можно сконструировать из ключей любого словаря.
