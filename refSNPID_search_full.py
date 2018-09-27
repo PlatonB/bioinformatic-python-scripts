@@ -295,7 +295,6 @@ ram_size = get_ram_size(us_dir_path)
 us_file_names = os.listdir(us_dir_path)
 for us_file_name in us_file_names:
         print('Поиск в таблице ' + os.path.basename(base_file_path) + ' строк с SNPs, взятыми из ' + us_file_name)
-        search_res, us_rs_alr_found = [], set()
         with open(os.path.join(us_dir_path, us_file_name)) as us_file_opened:
 
                 #Ищем индекс refSNPID-содержащего
@@ -332,8 +331,8 @@ for us_file_name in us_file_names:
                                 #завершения или продолжения дробления базы.
                                 base_stop_reading = 'no'
 
-                                #Найденные во фрагментах "базы" SNPs не будут
-                                #попадать в переформируемый массив с исследовательскими данными.
+                                #Найденные в текущем фрагменте "базы" SNPs не будут
+                                #попадать в переформируемый массив исследовательских данных.
                                 rem_us_two_dim = us_two_dim
 
                                 ##Дробление базы и поиск query-SNP-содержащих строк.
@@ -351,7 +350,9 @@ for us_file_name in us_file_names:
                                         base_partial_dict = table_to_dict(base_partial_two_dim,
                                                                           base_rs_col_index)
                                         
-                                        #Получение строк базы, содержащих искомые refSNPID.
+                                        #Прописывание в файл строк базы, содержащих искомые refSNPIDs.
+                                        #Переформирование исследовательского массива данных, а имеено,
+                                        #получение его сокращённого на совокупность найденных SNPs варианта.
                                         rem_us_two_dim = rs_search(rem_us_two_dim,
                                                                    us_rs_col_index,
                                                                    base_partial_dict,
