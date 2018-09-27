@@ -242,7 +242,7 @@ def rs_search(rem_two_dim, two_dim_rs_col_index, rs_and_ann_dict, trg_file_opene
         исследователя формируется обновлённый (сокращённый) набор refSNPIDs,
         который предполагается использовать при следующем вызове.
         '''
-        trun_two_dim, out_two_dim = [], []
+        trun_two_dim = []
         for row in rem_two_dim:
                 try:
                         rs_id = row[two_dim_rs_col_index]
