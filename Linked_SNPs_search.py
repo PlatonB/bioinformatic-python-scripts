@@ -3,7 +3,7 @@ print('''
 неравновесием по сцеплению с запрашиваемыми SNPs не ниже определённого
 порога r2 или D', и находящиеся в пределах "окна", равного 500 кбаз.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V1.0.
+Версия: V1.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -54,6 +54,9 @@ pop_name = input('''\nПопуляция из 1000 Genomes
 ld_measure = input('''\nМера неравновесия сцепления (LD)
 [r2|d_prime]: ''')
 ld_value = float(input('\n{} >= '.format(ld_measure)))
+query_snp_save = input('''\nВыводить в конечный файл запрашиваемый SNP?
+(игнорирование ввода ==> не выводить)
+[yes(|y)|<enter>]: ''')
 trg_file_format = input('''\nФормат конечных файлов
 (игнорирование ввода ==> json)
 [json|tsv]: ''')
@@ -108,6 +111,16 @@ for src_file_name in src_file_names:
                         if linked_snps_n_specs == []:
                                 continue
 
+                        #Опциональное дополнение списка словарей элементом,
+                        #содержащим пару запрашиваемый-запрашиваемый SNP.
+                        if query_snp_save == 'yes' or query_snp_save == 'y':
+                                query_snp_n_specs = {'variation1': rs_id,
+                                                     'population_name': pop_name,
+                                                     'variation2': rs_id,
+                                                     'r2': '1.000000',
+                                                     'd_prime': '1.000000'}
+                                linked_snps_n_specs.insert(0, query_snp_n_specs)
+                                
                         #Создание конечного файла того
                         #формата, который выбрал пользователь.
                         with open(trg_file_path, 'w') as trg_file_opened:
