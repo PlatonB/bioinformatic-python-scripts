@@ -3,7 +3,7 @@ print('''
 неравновесием по сцеплению с запрашиваемыми SNPs не ниже определённого
 порога r2 или D', и находящиеся в пределах "окна", равного 500 кбаз.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V1.1.
+Версия: V1.2.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -40,17 +40,22 @@ import os, sys, requests, re, json
 
 src_dir_path = input('Путь к папке с исходными файлами: ')
 trg_top_dir_path = input('\nПуть к папке для папок с конечными файлами: ')
-num_of_headers = int(input('''\nКоличество не считываемых строк в начале файла
-(хэдер, шапка таблицы и т.д.) [0|1|2|(...)]: '''))
+num_of_headers = input('''\nКоличество не обрабатываемых строк в начале файла
+(игнорирование ввода ==> хэдеров/шапок в таблице нет)
+[0(|<enter>)|1|2|...]: ''')
+if num_of_headers == '':
+        num_of_headers = 0
+else:
+        num_of_headers = int(num_of_headers)
 species = input('''\nВид
 (rest.ensembl.org/info/species?content-type=application/json, см. "name")
-(игнорирование ввода ==> homo_sapiens)
-[homo_sapiens|panthera_pardus|pteropus_vampyrus|(...)]: ''')
+(игнорирование ввода ==> человек)
+[homo_sapiens(|<enter>)|panthera_pardus|pteropus_vampyrus|...]: ''')
 if species == '':
         species = 'homo_sapiens'
 pop_name = input('''\nПопуляция из 1000 Genomes
 (ensembl.org/info/genome/variation/species/populations.html)
-[1000GENOMES:phase_3:EUR|1000GENOMES:phase_3:ALL|(...)]: ''')
+[1000GENOMES:phase_3:EUR|1000GENOMES:phase_3:ALL|...]: ''')
 ld_measure = input('''\nМера неравновесия сцепления (LD)
 [r2|d_prime]: ''')
 ld_value = float(input('\n{} >= '.format(ld_measure)))
@@ -59,7 +64,7 @@ query_snp_save = input('''\nВыводить в конечный файл зап
 [yes(|y)|<enter>]: ''')
 trg_file_format = input('''\nФормат конечных файлов
 (игнорирование ввода ==> json)
-[json|tsv]: ''')
+[json(|<enter>)|tsv]: ''')
 if trg_file_format == '':
         trg_file_format = 'json'
 
