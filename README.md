@@ -13,7 +13,7 @@ https://www.python.org/ftp/python/3.7.0/python-3.7.0-amd64.exe
 (ссылка будет периодически вручную обновляться)
 
 <h5>Fedora Linux.</h5>
-Обзор --> Показать приложения --> Утилиты --> Терминал.
+Обзор → Показать приложения → Утилиты → Терминал.
 <code>sudo dnf install python3-idle<\code>
 
 <h5>Ubuntu Linux.</h5>
