@@ -44,7 +44,7 @@
 Проще всего для запуска скриптов использовать официальную питоновскую среду разработки IDLE (не ниже 3-й версии!).
 
 ## Windows/ReactOS.
-IDLE входит в пакет Python. Скачать Python для Windows или [ReactOS](reactos.org):
+IDLE входит в пакет Python. Скачать Python для Windows или [ReactOS](https://github.com/reactos):
 
 https://www.python.org/ftp/python/3.7.0/python-3.7.0-amd64.exe
 
