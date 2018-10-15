@@ -1,6 +1,6 @@
 print('''
-Этот Python3-скрипт преобразовывает таблицы chr:pos или chr:pos1-pos2
-в BED-подобную структуру (...    chr№    pos1    pos2    ...).
+Этот Python3-скрипт преобразовывает подстроки chr:pos или chr:pos1-pos2
+в интервальную (BED-подобную) запись (...    chr№    pos1    pos2    ...).
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
 Версия: V3.0.
 Лицензия: GNU General Public License version 3.
