@@ -3,7 +3,7 @@ print('''
 неравновесием по сцеплению с запрашиваемыми SNPs не ниже определённого
 порога r2 или D', и находящиеся в пределах "окна", равного 500 кбаз.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V1.2.
+Версия: V1.3.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -20,7 +20,7 @@ print('''
 def query(url_template, refsnpid):
         '''
         Добавление текущего refSNPID в шаблон
-        запроса, осуществление этого запроса.
+        запроса и осуществление этого запроса.
         Возврат списка словарей, содержащих пару refSNPIDs
         (запрашиваемый и найденный), название популяции,
         а также значения r2 и D' для данной пары.
@@ -67,7 +67,7 @@ trg_file_format = input('''\nФормат конечных файлов
 [json(|<enter>)|tsv]: ''')
 if trg_file_format == '':
         trg_file_format = 'json'
-
+        
 #Первичный шаблон запроса к API и его заполнение
 #общими для всех запрашиваемых SNPs данными.
 emp_url_templ = 'https://rest.ensembl.org/ld/{}/refsnpid/{}?content-type=application/json;{}={}'
@@ -115,15 +115,16 @@ for src_file_name in src_file_names:
                         #ему конечный файл создаваться не будет.
                         if linked_snps_n_specs == []:
                                 continue
-
+                        
                         #Опциональное дополнение списка словарей элементом,
                         #содержащим пару запрашиваемый-запрашиваемый SNP.
+                        #Этот элемент будет добавлен в список на первую позицию.
                         if query_snp_save == 'yes' or query_snp_save == 'y':
                                 query_snp_n_specs = {'variation1': rs_id,
-                                                     'population_name': pop_name,
                                                      'variation2': rs_id,
                                                      'r2': '1.000000',
-                                                     'd_prime': '1.000000'}
+                                                     'd_prime': '1.000000',
+                                                     'population_name': pop_name}
                                 linked_snps_n_specs.insert(0, query_snp_n_specs)
                                 
                         #Создание конечного файла того
@@ -131,17 +132,22 @@ for src_file_name in src_file_names:
                         with open(trg_file_path, 'w') as trg_file_opened:
                                 if trg_file_format == 'json':
                                         
-                                        #Полученный список словарей пропишется
+                                        #Полученный ранее список словарей пропишется
                                         #в JSON-файл с формированием отступов.
                                         json.dump(linked_snps_n_specs, trg_file_opened, indent=4)
-
+                                        
                                 elif trg_file_format == 'tsv':
                                         
-                                        #От словаря к словарю энсембловского списка набор ключей идентичен.
-                                        #Поэтому хэдер TSV-таблицы можно сконструировать из ключей любого словаря.
-                                        #Осуществляем это по первому словарю и прописываем результат в конечный файл.
-                                        trg_file_opened.write('\t'.join(linked_snps_n_specs[0].keys()) + '\n')
-
-                                        #Строки основной части таблицы будут получаться из значений каждого словаря.
+                                        #Ключи в словарях, генерируемых Ensembl REST API,
+                                        #одни и те же, но занимают непостоянные позиции.
+                                        #Поэтому шапку конечной таблицы придётся прописывать
+                                        #вручную, а не составлять из ключей одного из словарей.
+                                        trg_file_opened.write('variation1\tvariation2\tr2\td_prime\tpopulation_name\n')
+                                        
+                                        #Строки основной части конечной таблицы будут
+                                        #получаться из значений каждого словаря.
+                                        #Последовательность ячеек в каждой строке
+                                        #конечной таблицы при этом задаётся вручную.
                                         for dic in linked_snps_n_specs:
-                                                trg_file_opened.write('\t'.join(dic.values()) + '\n')
+                                                trg_file_opened.write(dic['variation1'] + '\t' + dic['variation2'] + '\t' + \
+                                                                      dic['r2'] + '\t' + dic['d_prime'] + '\t' + dic['population_name'] + '\n')
