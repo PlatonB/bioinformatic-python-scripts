@@ -260,8 +260,8 @@ def rs_search(rem_two_dim, two_dim_rs_col_index, rs_and_ann_dict, trg_file_opene
 import os, csv, re
 
 us_dir_path = input('Путь к папке с таблицами исследователя: ')
-base_file_path = input('Путь к "базе": ')
-trg_dir_path = input('Путь к папке для конечных файлов: ')
+base_file_path = input('\nПуть к "базе": ')
+trg_dir_path = input('\nПуть к папке для конечных файлов: ')
 base_num_of_headers = input('''\nКоличество не обрабатываемых строк в начале "базы"
 (игнорирование ввода ==> хэдеров/шапок в "базе" нет)
 [0(|<enter>)|1|2|...]: ''')
