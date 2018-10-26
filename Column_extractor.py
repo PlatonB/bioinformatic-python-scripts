@@ -5,6 +5,9 @@ print('''
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
+Простое руководство по установке среды разработки и запуску скриптов:
+github.com/PlatonB/bioinformatic-python-scripts#Установка-среды-разработки
+
 Пример.
 Первые 7 столбцов таблицы аннотаций трёх SNP:
 rs12896956	14:105767258-105767258	T	intron_variant	MODIFIER	IGHG3	ENSG00000211897

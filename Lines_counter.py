@@ -6,6 +6,9 @@ Python3-скрипт, считающий количество непустых
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
+Простое руководство по установке среды разработки и запуску скриптов:
+github.com/PlatonB/bioinformatic-python-scripts#Установка-среды-разработки
+
 Скрипт генерирует JSON-файл такой структуры:
 {
     "in_all_files": [

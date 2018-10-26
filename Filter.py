@@ -6,6 +6,9 @@ Python3-скрипт, фильтрующий строки таблиц по оп
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
+Простое руководство по установке среды разработки и запуску скриптов:
+github.com/PlatonB/bioinformatic-python-scripts#Установка-среды-разработки
+
 Пример.
 Несколько SNP и найденные для них с помощью
 Ensembl VEP script частоты в трёх популяциях:

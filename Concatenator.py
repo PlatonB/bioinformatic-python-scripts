@@ -4,6 +4,9 @@ Python3-скрипт, объединяющий тексты в один файл
 Версия: V1.0.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
+
+Простое руководство по установке среды разработки и запуску скриптов:
+github.com/PlatonB/bioinformatic-python-scripts#Установка-среды-разработки
 ''')
 
 def write_into_file(file_or_dataset, trg_file_opened):
