@@ -1,7 +1,7 @@
 print('''
 Python3-скрипт, выводящий первые n строк большого текстового файла.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V2.0.
+Версия: V2.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -22,8 +22,9 @@ github.com/PlatonB/bioinformatic-python-scripts#Установка-среды-р
 import os
 
 src_file_path = input('Путь к исходному файлу: ')
-str_quan = int(input('Количество выводимых или перенаправляемых строк: '))
-redirection = input('''Перенаправить результат в отдельный файл?
+str_quan = int(input('\nКоличество выводимых или перенаправляемых строк: '))
+redirection = input('''\nПеренаправить результат в отдельный файл?
+(игнорирование ввода ==> вывести результат на экран)
 [redirect|<enter>]: ''')
 with open(src_file_path) as src_file_opened:
         if redirection == 'redirect':
