@@ -56,9 +56,9 @@ https://www.python.org/ftp/python/3.7.0/python-3.7.0-amd64.exe
 
 `sudo dnf install python3-idle`
 
-## Ubuntu Linux.
+## Ubuntu Linux/[elementary OS](https://elementary.io/ru/)/Linux Mint.
 
-`sudo apt install idle3`
+`sudo apt install idle-python3.6`
 
 # Сохранение скрипта(-ов) на свой компьютер.
 
