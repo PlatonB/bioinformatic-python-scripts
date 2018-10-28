@@ -52,11 +52,13 @@ https://www.python.org/ftp/python/3.7.0/python-3.7.0-amd64.exe
 (ссылка будет периодически вручную обновляться)
 
 ## Fedora Linux.
-Обзор → Показать приложения → Утилиты → Терминал. Введите команду:
+Обзор → Показать приложения → Утилиты → `Терминал`. Введите команду:
 
 `sudo dnf install python3-idle`
 
 ## Ubuntu Linux/[elementary OS](https://elementary.io/ru/)/Linux Mint.
+
+В программе `Терминал` введите такую команду:
 
 `sudo apt install idle-python3.6`
 
