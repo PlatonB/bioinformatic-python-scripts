@@ -1,7 +1,7 @@
 print('''
 Этот Python3-скрипт копирует в отдельные файлы необходимые пользователю столбцы.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2018.
-Версия: V2.1.
+Версия: V2.2.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -36,11 +36,12 @@ import os
 
 src_file_names = os.listdir(src_dir_path)
 for src_file_name in src_file_names:
+        print('Обрабатывается файл', src_file_name)
         with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
                 
                 #Конструируемое ниже имя конечного файла
                 #будет содержать номера выделенных столбцов.
-                trg_file_name = src_file_name.split('.')[0] + '_col' + \
+                trg_file_name = '.'.join(src_file_name.split('.')[:-1]) + '_col' + \
                                 '+'.join([str(col_number) for col_number in col_numbers]) + '.txt'
                 
                 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
