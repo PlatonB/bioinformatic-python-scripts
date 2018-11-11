@@ -32,7 +32,6 @@ if redirection != 'redirect' and redirection != '':
 with open(src_file_path) as src_file_opened:
         if redirection == 'redirect':
                 trg_dir_path = input('\nПуть к папке для конечного файла: ')
-                '.'.join(os.path.basename(src_file_path).split('.')[:-1])
                 trg_file_name = '.'.join(os.path.basename(src_file_path).split('.')[:-1]) + '_fir_' + str(str_quan) + '.txt'
                 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                         for num in range(str_quan):
