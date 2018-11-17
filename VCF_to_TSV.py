@@ -1,7 +1,7 @@
 print('''
 Python3-скрипт, конвертирующий VCF4-файлы (Variant Call Format, version 4.x) в TSV (Tab-Separated Values).
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V2.0.
+Версия: V2.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -28,7 +28,7 @@ meta_lines_fate = input('''\nСохранять строки мета-инфор
 [yes(|y|<enter>)|no(|n)]: ''')
 if meta_lines_fate != 'yes' and meta_lines_fate != 'y' and \
    meta_lines_fate != 'no' and meta_lines_fate != 'n' and meta_lines_fate != '':
-        print(f'{meta_lines_fate} - недопустимая опция')
+        print(f'\n{meta_lines_fate} - недопустимая опция')
         sys.exit()
 
 #Обязательные согласно стандарту VCF заголовки
@@ -129,7 +129,7 @@ VCF-файл должен содержать шапку, начинающуюс�
                         if header_check_set != fixed_fields:
                                 for cell in sorted(list(header_check_set - fixed_fields)):
                                         print(f'''\nОшибка в файле {src_file_name}:
-{cell[2:]} - неправильный заголовок столбца {cell[:1]}''')
+{cell[2:]} - неправильный заголовок столбца {cell[:1]} VCF-файла''')
                                 os.remove(os.path.join(trg_dir_path, trg_file_name))
                                 sys.exit()
                                 
@@ -180,9 +180,23 @@ VCF-файл должен содержать шапку, начинающуюс�
                                         info_key = cell_element.split('=')[0]
                                         try:
                                                 info_val = cell_element.split('=')[1]
-                                                info_structure[info_key] = info_val
+                                                if info_key in info_structure:
+                                                        info_structure[info_key] = info_val
+                                                else:
+                                                        print(f'''\nОшибка в файле {src_file_name}:
+Отсутствует или неправильно составлена строка мета-информации,
+описывающая элемент {info_key} INFO-строк VCF-файла''')
+                                                        os.remove(os.path.join(trg_dir_path, trg_file_name))
+                                                        sys.exit()
                                         except IndexError:
-                                                info_structure[info_key] = cell_element
+                                                if info_key in info_structure:
+                                                        info_structure[info_key] = cell_element
+                                                else:
+                                                        print(f'''\nОшибка в файле {src_file_name}:
+Отсутствует или неправильно составлена строка мета-информации,
+описывающая элемент {info_key} INFO-строк VCF-файла''')
+                                                        os.remove(os.path.join(trg_dir_path, trg_file_name))
+                                                        sys.exit()
                                 data_row[7] = '\t'.join(info_structure.values())
                                 
                                 #Прописывание обновлённых строк
