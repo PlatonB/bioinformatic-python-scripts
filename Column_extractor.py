@@ -1,7 +1,7 @@
 print('''
 Этот Python3-скрипт копирует в отдельные файлы необходимые пользователю столбцы.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2018.
-Версия: V2.2.
+Версия: V2.3.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -9,15 +9,19 @@ print('''
 github.com/PlatonB/bioinformatic-python-scripts#Установка-среды-разработки
 
 Пример.
+
 Первые 7 столбцов таблицы аннотаций трёх SNP:
 rs12896956	14:105767258-105767258	T	intron_variant	MODIFIER	IGHG3	ENSG00000211897
 rs12897751	14:105767411-105767411	C	intron_variant	MODIFIER	IGHG3	ENSG00000211897
 rs3020575	14:105760146-105760146	A	downstream_gene_variant	MODIFIER	IGHG3	ENSG00000211897
+
 Оставляем только столбцы с refSNPID и Official Gene Symbol (1-й и 6-й):
 rs12896956	IGHG3
 rs12897751	IGHG3
 rs3020575	IGHG3
 ''')
+
+import os
 
 src_dir_path = input('Путь к папке с исходными файлами: ')
 trg_dir_path = input('\nПуть к папке для конечных файлов: ')
@@ -32,8 +36,6 @@ else:
 col_numbers = [int(col_number) for col_number in input('''\nНомер одного или номера нескольких экстрагируемых столбцов
 (через пробел): ''').split()]
 
-import os
-
 src_file_names = os.listdir(src_dir_path)
 for src_file_name in src_file_names:
         print('Обрабатывается файл', src_file_name)
@@ -42,7 +44,7 @@ for src_file_name in src_file_names:
                 #Конструируемое ниже имя конечного файла
                 #будет содержать номера выделенных столбцов.
                 trg_file_name = '.'.join(src_file_name.split('.')[:-1]) + '_col' + \
-                                '+'.join([str(col_number) for col_number in col_numbers]) + '.txt'
+                                '+'.join([str(col_number) for col_number in col_numbers]) + '.tsv'
                 
                 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                         
