@@ -2,7 +2,7 @@ print('''
 Python3-скрипт, отбирающий строки
 таблицы, содержащие запрашиваемые refSNPIDs.
 Подходит для аннотирования наборов SNP.
-Версия: V6.1.
+Версия: V6.2.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2018.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
@@ -276,7 +276,7 @@ else:
 #Вводимый пользователем номер столбца - не
 #индекс соответстующего элемента вложенного списка!
 #Для преобразования в индекс надо будет вычесть 1.
-base_pval_column = input('''Номер столбца "базы" со значениями p-value или иной величины,
+base_pval_column = input('''\nНомер столбца "базы" со значениями p-value или иной величины,
 по которой желаете отфильтровать строки "базы"
 (игнорирование ввода ==> не фильтровать)
 [no_filter(|<enter>)|1|2|3|...]: ''')
@@ -303,29 +303,29 @@ us_file_names = os.listdir(us_dir_path)
 for us_file_name in us_file_names:
         print('Поиск в таблице ' + os.path.basename(base_file_path) + ' строк с SNPs, взятыми из ' + us_file_name)
         with open(os.path.join(us_dir_path, us_file_name)) as us_file_opened:
-
+                
                 #Ищем индекс refSNPID-содержащего
                 #столбца исследовательского файла.
                 us_rs_col_index = rs_col_index_search(us_file_opened)
-
+                
                 #Если в таблице исследователя есть хэдер-содержащая строка,
                 #исключаем её попадание в следующий этап конвейера.
                 us_first_line = us_file_opened.readline()
                 if us_first_line.find('#') == -1 or us_first_line.find('track name') == -1:
                         us_file_opened.seek(0)
-
+                        
                 #Таблица исследователя сразу, без дробления,
                 #преобразуется в двумерный массив.
                 us_two_dim = list(csv.reader(us_file_opened, delimiter = '\t'))
                 
                 ##Работа с базой.
                 with open(base_file_path) as base_file_opened:
-                        trg_file_name = us_file_name.split('.')[0] + '_I_' + os.path.basename(base_file_path.split('.txt')[0]) + '.txt'
+                        trg_file_name = us_file_name.split('.')[0] + '_I_' + '.'.join(os.path.basename(base_file_path).split('.')[:-1]) + '.tsv'
                         with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                                 
                                 #Нахождение индекса refSNPID-столбца базы.
                                 base_rs_col_index = rs_col_index_search(base_file_opened)
-
+                                
                                 #"Отделение" хэдеров от базы и
                                 #прописывание их в конечный файл.
                                 base_headers = header_save(base_file_opened,
@@ -337,11 +337,11 @@ for us_file_name in us_file_names:
                                 #Переменная-стоппер, служащая сигналом
                                 #завершения или продолжения дробления базы.
                                 base_stop_reading = 'no'
-
+                                
                                 #Найденные в текущем фрагменте "базы" SNPs не будут
                                 #попадать в переформируемый массив исследовательских данных.
                                 rem_us_two_dim = us_two_dim
-
+                                
                                 ##Дробление базы и поиск query-SNP-содержащих строк.
                                 while base_stop_reading:
                                         
@@ -364,7 +364,7 @@ for us_file_name in us_file_names:
                                                                    us_rs_col_index,
                                                                    base_partial_dict,
                                                                    trg_file_opened)
-
+                                        
                                         #Выполнение цикла, в котором вызывается функция дробного
                                         #считывания базы, прерывается после того, как переменная-стоппер
                                         #в этой функции принимает соответствующее значение.
