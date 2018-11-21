@@ -2,7 +2,7 @@ print('''
 Python3-скрипт, считающий количество непустых
 строк файлов, размещённых в дереве папок.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2018.
-Версия: V2.2.
+Версия: V2.3.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -33,8 +33,9 @@ import os, json
 
 src_dir_path = input('Путь к исходной верхней папке: ')
 trg_dir_path = input('\nПуть к папке для конечного JSON-файла: ')
-num_of_headers = input('''\nКоличество не учитываемых строк в начале файлов
-(игнорирование ввода ==> хэдеров/шапок в файлах нет)
+num_of_headers = input('''\nКоличество не учитываемых строк
+в начале каждого исходного текста
+(игнорирование ввода ==> хэдеров/шапок в текстах нет)
 [0(|<enter>)|1|2|...]: ''')
 if num_of_headers == '':
         num_of_headers = 0
@@ -120,3 +121,19 @@ statistics['in_all_files'].append(len(all_uniq_strs))
 trg_file_name = os.path.basename(src_dir_path) + '_stat' + '.json'
 with open(os.path.join(trg_dir_path, trg_file_name), 'w', encoding='utf-8') as trg_file_opened:
         json.dump(statistics, trg_file_opened, ensure_ascii=False, indent=4, sort_keys=True)
+
+##Бонус: пример парсера получаемого этим скриптом JSON-файла.
+##Извлекаем пофайловые значения количества
+##непустых строк без вычета их повторов.
+##Созраняем результаты в список.
+'''
+import json
+path = '/home/platon/_0_Диссертация/03_Рез/09_chr14/Biased_1000G/Biased_1000G_stat.json'
+data = json.load(open(path))
+res = []
+for folder_key in data['in_each_file']:
+        for file_key in data['in_each_file'][folder_key]:
+                res.append(data['in_each_file'][folder_key][file_key][0])
+print(res)
+#[18, 0, 18, 13, 12]
+'''
