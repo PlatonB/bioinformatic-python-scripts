@@ -2,7 +2,7 @@ print('''
 Python3-скрипт, считающий количество непустых
 строк файлов, размещённых в дереве папок.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2018.
-Версия: V2.1.
+Версия: V2.2.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -29,8 +29,7 @@ github.com/PlatonB/bioinformatic-python-scripts#Установка-среды-р
 }
 ''')
 
-import os
-import json
+import os, json
 
 src_dir_path = input('Путь к исходной верхней папке: ')
 trg_dir_path = input('\nПуть к папке для конечного JSON-файла: ')
@@ -118,6 +117,6 @@ statistics['in_all_files'].append(len(all_uniq_strs))
 
 #Полученная структура прописывается в JSON-файл с правильной
 #обработкой кириллицы, формированием отступов и сортировкой ключей.
-trg_file_name = os.path.basename(src_dir_path) + '_stat' + '.txt'
+trg_file_name = os.path.basename(src_dir_path) + '_stat' + '.json'
 with open(os.path.join(trg_dir_path, trg_file_name), 'w', encoding='utf-8') as trg_file_opened:
         json.dump(statistics, trg_file_opened, ensure_ascii=False, indent=4, sort_keys=True)
