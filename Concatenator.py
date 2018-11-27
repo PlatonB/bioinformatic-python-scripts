@@ -1,7 +1,7 @@
 print('''
 Python3-скрипт, объединяющий тексты в один файл.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V1.0.
+Версия: V1.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -17,6 +17,8 @@ def write_into_file(file_or_dataset, trg_file_opened):
                 if line.find('\n') == -1:
                         line += '\n'
                 trg_file_opened.write(line)
+
+import sys, os
 
 src_dir_path = input('Путь к папке с исходными файлами: ')
 trg_dir_path = input('\nПуть к папке для конкатенированного файла: ')
@@ -35,30 +37,40 @@ if num_of_headers > 0:
 таблицы с одинаковой шапкой)
 (игнорирование ввода ==> не прописывать
 в конечный текст хэдер(-ы)/шапку(-и))
-[yes(|y)|<enter>]: ''')
+[yes(|y)|no(|n|<enter>)]: ''')
+        if headers_fate != 'yes' and headers_fate != 'y' and headers_fate != 'no' \
+           and headers_fate != 'n' and headers_fate != '':
+                print(f'{headers_fate} - недопустимая опция')
+                sys.exit()
 else:
         headers_fate = 'no_headers'
 kill_repeats = input('''\nУдалять копии строк?
 (игнорирование ввода ==> не удалять)
 [yes(|y)|no(|n|<enter>)]: ''')
-
-import os
+if kill_repeats != 'yes' and kill_repeats != 'y' and kill_repeats != 'no' \
+   and kill_repeats != 'n' and kill_repeats != '':
+        print(f'{kill_repeats} - недопустимая опция')
+        sys.exit()
+        
+#Создание списка имён объединяемых файлов.
+src_file_names = os.listdir(src_dir_path)
 
 #В значительной части скриптов репозитория
 #результаты работы размещаются в файлы,
 #соответствующие каждому исходному файлу.
 #В виду специфики программы-конкатенатора, все
 #результаты пропишутся в один конечный файл.
-#Создаём его сразу.
+#Создаём его сразу после построения
+#списка имён исходных файлов.
 trg_file_name = os.path.basename(src_dir_path) + '_conc' + '.txt'
 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
         
         #Если пользователь предпочёл уничтожать копии уже встретившихся
         #строк, то результаты конкатенации будут накапливаться во множество.
+        #Если нет - это множество останется пустым.
         data_wo_repeats = set()
         
         #Работа с исходными файлами.
-        src_file_names = os.listdir(src_dir_path)
         for src_file_name in src_file_names:
                 with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
                         
