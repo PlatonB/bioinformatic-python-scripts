@@ -2,7 +2,7 @@ print('''
 Python3-скрипт, фильтрующий строки таблиц по определённым
 правилам, применяемым к ячейкам заданных столбцов.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V2.1.
+Версия: V2.2.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -35,7 +35,8 @@ import os, sys
 
 src_dir_path = input('Путь к папке с исходными tab-файлами: ')
 trg_dir_path = input('\nПуть к папке для конечных файлов: ')
-num_of_headers = input('''\nКоличество не обрабатываемых строк в начале каждой таблицы
+num_of_headers = input('''\nКоличество не обрабатываемых строк
+в начале каждой исходной таблицы
 (игнорирование ввода ==> хэдеров/шапок в таблицах нет)
 [0(|<enter>)|1|2|...]: ''')
 if num_of_headers == '':
@@ -107,7 +108,9 @@ for src_file_name in src_file_names:
                 headers = [src_file_opened.readline() for header_index in range(num_of_headers)]
                 
                 #Создание конечного файла и прописывание в него хэдеров.
-                trg_file_name = '.'.join(src_file_name.split('.')[:-1]) + '_' + 'filt' + '.tsv'
+                src_file_base = '.'.join(src_file_name.split('.')[:-1])
+                src_file_ext = '.' + src_file_name.split('.')[-1]
+                trg_file_name = src_file_base + '_filt' + src_file_ext
                 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                         for header in headers:
                                 if header.find('\n') == -1:
