@@ -165,7 +165,7 @@ for src_file_name in src_file_names:
                 src_table.sort(key=lambda row: [cell_split(row[int(col_number) - 1], []) for col_number in col_numbers],
                                reverse=reverse_val)
                 
-                #Создание конечного файла и прописывание результатов в конечный файл.
+                #Создание конечного файла и прописывание в него результатов.
                 src_file_base = '.'.join(src_file_name.split('.')[:-1])
                 src_file_ext = '.' + src_file_name.split('.')[-1]
                 trg_file_name = src_file_base + '_srtd' + src_file_ext
