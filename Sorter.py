@@ -1,7 +1,7 @@
 print('''
 Python3-скрипт, сортирующий таблицу по указанным пользователем столбцам.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V3.1.
+Версия: V3.2.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -48,7 +48,7 @@ def cell_split(cell, sort_rule, cur_start_index = 0):
         
         #Число нашлось.
         if num_object != None:
-
+                
                 #Число могло найтись как целое, так и дробное.
                 #Чтобы найденные числа правильно сравнивались при
                 #дальнейшей сортировке, конвертируем их все в вещественные.
@@ -118,19 +118,20 @@ def cell_split(cell, sort_rule, cur_start_index = 0):
         
 ####################################################################################################
 
-import os
-import re
+import sys, os, re
 
 src_dir_path = input('Путь к папке с исходными файлами: ')
 trg_dir_path = input('\nПуть к папке для конечных файлов: ')
-num_of_headers = input('''\nКоличество не обрабатываемых строк в начале файла
-(игнорирование ввода ==> хэдеров/шапок в таблице нет)
+num_of_headers = input('''\nКоличество не обрабатываемых строк
+в начале каждой исходной таблицы
+(игнорирование ввода ==> хэдеров/шапок в таблицах нет)
 [0(|<enter>)|1|2|...]: ''')
 if num_of_headers == '':
         num_of_headers = 0
 else:
         num_of_headers = int(num_of_headers)
-col_numbers = input('''\nНомер одного или номера нескольких определяющих сортировку столбцов
+col_numbers = input('''\nНомер одного или номера нескольких
+определяющих сортировку столбцов
 (через пробел)
 (игнорирование ввода ==> сортировка по всем столбцам): ''').split()
 reverse_val = input('''\nСортировать в обратном порядке (по убыванию)?
@@ -140,7 +141,10 @@ if reverse_val == 'yes' or reverse_val == 'y':
         reverse_val = True
 elif reverse_val == 'no' or reverse_val == 'n' or reverse_val == '':
         reverse_val = False
-
+else:
+        print('\nОшибка. Вы не задали порядок сортировки')
+        sys.exit()
+        
 src_file_names = os.listdir(src_dir_path)
 for src_file_name in src_file_names:
         with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
@@ -150,7 +154,7 @@ for src_file_name in src_file_names:
                 headers = [src_file_opened.readline() for header_index in range(num_of_headers)]
                 
                 #Основная часть таблицы преобразуется в двумерный массив.
-                src_table = [line.split('\t') for line in src_file_opened]
+                src_table = [line.split('\n')[0].split('\t') for line in src_file_opened]
                 
                 #Пользователь не указал количество задающих сортировку столбцов.
                 #Тогда сделаем таковыми все столбцы таблицы.
@@ -161,12 +165,12 @@ for src_file_name in src_file_names:
                 src_table.sort(key=lambda row: [cell_split(row[int(col_number) - 1], []) for col_number in col_numbers],
                                reverse=reverse_val)
                 
-                #Прописывание результатов в конечный файл.
-                trg_file_name = src_file_name.split('.')[0] + '_' + 'srtd' + '.txt'
+                #Создание конечного файла и прописывание результатов в конечный файл.
+                src_file_base = '.'.join(src_file_name.split('.')[:-1])
+                src_file_ext = '.' + src_file_name.split('.')[-1]
+                trg_file_name = src_file_base + '_srtd' + src_file_ext
                 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                         for header in headers:
                                 trg_file_opened.write(header)
                         for row in src_table:
-                                if str(row[-1]).find('\n') == -1:
-                                        row[-1] = str(row[-1]) + '\n'
-                                trg_file_opened.write('\t'.join([str(cell) for cell in row]))
+                                trg_file_opened.write('\t'.join(row) + '\n')
