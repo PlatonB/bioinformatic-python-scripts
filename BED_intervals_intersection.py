@@ -333,7 +333,7 @@ for us_file_name in us_file_names:
 
         #Прописываем результаты в конечный файл.
         trg_file_name = '[' + us_file_name.split('.')[0] + '_I_' \
-                        + os.path.basename(ucsc_file_path.split('.')[0]) + ']' + '.txt'
+                        + os.path.basename(ucsc_file_path.split('.')[0]) + ']' + '.bed'
         if ucsc_header != None and us_header != None:
                 trg_header = '#[' + ucsc_header.split('\n')[0] + ' INTERSECTED WITH ' + us_header.split('\n')[0] + ']'
                 if trg_header.find('\n') == -1:
