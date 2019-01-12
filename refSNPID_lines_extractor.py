@@ -2,8 +2,8 @@ print('''
 Python3-скрипт, отбирающий строки
 таблицы, содержащие запрашиваемые refSNPIDs.
 Подходит для аннотирования наборов SNP.
-Версия: V6.2.
-Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2018.
+Версия: V6.3.
+Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2019.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -50,6 +50,7 @@ def get_ram_size(src_dir):
         #Windows.
         if os_name == 'nt':
                 print('Из-за нерешённой проблемы с кодировками, Windows пока не поддерживается')
+                sys.exit()
 
                 #В Windows вывести информацию о
                 #железе позволяет утилита systeminfo.
@@ -260,11 +261,15 @@ def rs_search(rem_two_dim, two_dim_rs_col_index, rs_and_ann_dict, trg_file_opene
 
 ####################################################################################################
 
-import os, csv, re
+import os, sys, csv, re
 
 us_dir_path = input('Путь к папке с таблицами исследователя: ')
+
 base_file_path = input('\nПуть к "базе": ')
+base_file_name = os.path.basename(base_file_path)
+
 trg_dir_path = input('\nПуть к папке для конечных файлов: ')
+
 base_num_of_headers = input('''\nКоличество не обрабатываемых строк в начале "базы"
 (игнорирование ввода ==> хэдеров/шапок в "базе" нет)
 [0(|<enter>)|1|2|...]: ''')
@@ -284,6 +289,7 @@ if base_pval_column == 'no_filter' or base_pval_column == '':
         base_pval_column, base_pval_threshold = None, None
 else:
         base_pval_column = int(base_pval_column)
+        
         base_pval_threshold = float(input('''Верхний порог фильтруемой величины
 [0.05|5.5e-10|...]
 значения выбранного столбца ≤ '''))
@@ -301,7 +307,7 @@ ram_size = get_ram_size(us_dir_path)
 ##то в следующих фрагментах он искаться не будет.
 us_file_names = os.listdir(us_dir_path)
 for us_file_name in us_file_names:
-        print('Поиск в таблице ' + os.path.basename(base_file_path) + ' строк с SNPs, взятыми из ' + us_file_name)
+        print('Поиск в таблице ' + base_file_name + ' строк с SNPs, взятыми из ' + us_file_name)
         with open(os.path.join(us_dir_path, us_file_name)) as us_file_opened:
                 
                 #Ищем индекс refSNPID-содержащего
@@ -320,7 +326,7 @@ for us_file_name in us_file_names:
                 
                 ##Работа с базой.
                 with open(base_file_path) as base_file_opened:
-                        trg_file_name = us_file_name.split('.')[0] + '_I_' + '.'.join(os.path.basename(base_file_path).split('.')[:-1]) + '.tsv'
+                        trg_file_name = '.'.join(us_file_name.split('.')[:-1]) + '_I_' + base_file_name
                         with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                                 
                                 #Нахождение индекса refSNPID-столбца базы.
