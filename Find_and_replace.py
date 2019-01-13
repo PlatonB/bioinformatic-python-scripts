@@ -1,8 +1,8 @@
 print('''
 Python3-скрипт переименования папок и файлов,
 а также поиска и замены подстрок в текстах.
-Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V1.0.
+Автор: Платон Быкадоров (platon.work@gmail.com), 2018-2019.
+Версия: V1.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -74,32 +74,38 @@ src_top_dir_path = input('Путь к исходной верхней папке
 rename_dirs = input('''\nПереименовывать папки?
 [in_current_folder|deep|no(|n)]: ''')
 check_input(rename_dirs)
+
 if rename_dirs == 'in_current_folder' or rename_dirs == 'deep':
         rename_dirs_pattern = input('''\nЗаменяемая часть названий папок
 (четырьмя пробелами с каждой стороны
 выделен пример регулярного выражения)
 [Whole_Blood|2018|    ^    |...]: ''')
+        
         rename_dirs_repl = input('\nНа что заменять?: ')
         
 rename_files = input('''\nПереименовывать файлы?
 [in_current_folder|deep|no(|n)]: ''')
 check_input(rename_files)
+
 if rename_files == 'in_current_folder' or rename_files == 'deep':
         rename_files_pattern = input('''\nЗаменяемая часть названий файлов
 (четырьмя пробелами с каждой стороны
 выделен пример регулярного выражения)
-[chr14|.bed|    (txt)|(od[tsp])    |...]: ''')
+[chr14|bed|    (?:tab)|(?:[ct]sv)    |...]: ''')
+        
         rename_files_repl = input('\nНа что заменять?: ')
-                
+        
 ctrl_h = input('''\nНайти и заменить подстроку в файлах?
 [in_current_folder|deep|no(|n)]: ''')
 check_input(ctrl_h)
+
 if ctrl_h == 'in_current_folder' or ctrl_h == 'deep':
         trg_top_dir_path = input('\nПуть к верхней папке для конечных файлов: ')
         if trg_top_dir_path == src_top_dir_path or trg_top_dir_path.startswith(src_top_dir_path + os.sep) == True:
                 print('''Конечная папка не должна быть той же, что
 и исходная, или находиться внутри исходной''')
                 sys.exit()
+                
         num_of_headers = input('''\nКоличество не обрабатываемых строк
 в начале каждого исходного текста
 (игнорирование ввода ==> хэдеров/шапок в текстах нет)
@@ -108,12 +114,14 @@ if ctrl_h == 'in_current_folder' or ctrl_h == 'deep':
                 num_of_headers = 0
         else:
                 num_of_headers = int(num_of_headers)
+                
         rename_ctrl_h_pattern = input('''\nЗаменяемая часть текстов
 (четырьмя пробелами с каждой стороны
 выделен пример регулярного выражения)
 [,|:|    (?<=Type=).+?(?=,)    |...]: ''')
+        
         rename_ctrl_h_repl = input('\nНа что заменять?: ')
-
+        
 if 'rename_dirs_pattern' in locals() or 'rename_files_pattern' in locals():
         are_you_sure = input('''\nЧасть выбранных Вами действий
 приведёт к потере оригинальных названий.
