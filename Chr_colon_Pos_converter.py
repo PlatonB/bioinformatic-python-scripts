@@ -1,8 +1,8 @@
 print('''
 Этот Python3-скрипт преобразовывает подстроки chr№:pos или chr№:pos1-pos2
 в интервальную (BED-подобную) запись (...    chr№    pos1    pos2    ...).
-Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V3.0.
+Автор: Платон Быкадоров (platon.work@gmail.com), 2018-2019.
+Версия: V3.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -36,7 +36,9 @@ rs61994836	CHR_HSCHR14_3_CTG1	105802565	105802566	C	intergenic_variant
 import os, re, sys
 
 src_dir_path = input('Путь к папке с исходными tab-файлами: ')
+
 trg_dir_path = input('\nПуть к папке для конечных файлов: ')
+
 num_of_headers = input('''\nКоличество не обрабатываемых строк в начале каждой таблицы
 (игнорирование ввода ==> хэдеров/шапок в таблицах нет)
 [0(|<enter>)|1|2|...]: ''')
@@ -48,7 +50,9 @@ else:
 src_file_names = os.listdir(src_dir_path)
 for src_file_name in src_file_names:
         with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
-                trg_file_name = src_file_name.split('.')[0] + '_' + 'c_p_p' + '.txt'
+                src_file_base = '.'.join(src_file_name.split('.')[:-1])
+                src_file_ext = '.' + src_file_name.split('.')[-1]
+                trg_file_name = src_file_base + '_c_p_p' + src_file_ext
                 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                         
                         #Формирование списка хэдеров и добавление хэдеров в конечный файл.
