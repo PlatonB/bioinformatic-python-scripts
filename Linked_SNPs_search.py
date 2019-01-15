@@ -2,8 +2,8 @@ print('''
 Этот Python3-клиент Ensembl REST API ищет SNPs, обладающие
 неравновесием по сцеплению с запрашиваемыми SNPs не ниже определённого
 порога r2 или D', и находящиеся в пределах "окна", равного 500 кбаз.
-Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V2.0.
+Автор: Платон Быкадоров (platon.work@gmail.com), 2018-2019.
+Версия: V3.0.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -57,7 +57,9 @@ def query_to_ens(url_template, refsnpid):
 import os, sys, requests, re, json
 
 src_dir_path = input('Путь к папке с исходными файлами: ')
+
 trg_top_dir_path = input('\nПуть к папке для папок с конечными файлами: ')
+
 num_of_headers = input('''\nКоличество не обрабатываемых строк
 в начале каждой исходной таблицы
 (игнорирование ввода ==> хэдеров/шапок в таблицах нет)
@@ -66,12 +68,14 @@ if num_of_headers == '':
         num_of_headers = 0
 else:
         num_of_headers = int(num_of_headers)
+        
 species = input('''\nВид
 (rest.ensembl.org/info/species?content-type=application/json, см. "name")
 (игнорирование ввода ==> человек)
 [homo_sapiens(|<enter>)|panthera_pardus|pteropus_vampyrus|...]: ''')
 if species == '':
         species = 'homo_sapiens'
+        
 pop_name = input('''\nПопуляция по 1000 Genomes
 (ensembl.org/info/genome/variation/species/populations.html)
 (игнорирование ввода ==> 1000GENOMES:phase_3:ALL)
@@ -81,12 +85,15 @@ if pop_name == '':
 elif pop_name.startswith('1000GENOMES:phase_3:') == False:
         print(f'{pop_name} - недопустимая опция')
         sys.exit()
+        
 ld_measure = input('''\nМера неравновесия сцепления (LD)
 [r2|d_prime]: ''')
 if ld_measure != 'r2' and ld_measure != 'd_prime':
         print(f'{ld_measure} - недопустимая опция')
         sys.exit()
-ld_value = float(input('\n{} >= '.format(ld_measure)))
+        
+ld_value = float(input(f'\n{ld_measure} ≥ '))
+
 query_snp_save = input('''\nВыводить в конечный файл запрашиваемый SNP?
 (игнорирование ввода ==> не выводить)
 [yes(|y)|no(|n|<enter>)]: ''')
@@ -94,6 +101,7 @@ if query_snp_save != 'yes' and query_snp_save != 'y' and query_snp_save != 'no' 
    and query_snp_save != 'n' and query_snp_save != '':
         print(f'{query_snp_save} - недопустимая опция')
         sys.exit()
+        
 trg_file_format = input('''\nФормат конечных файлов
 (игнорирование ввода ==> json)
 [json(|<enter>)|tsv]: ''')
@@ -144,21 +152,32 @@ for src_file_name in src_file_names:
                         #Если в исходном наборе определённый SNP встретился
                         #ещё раз, то необходимо предотвратить повторный запрос.
                         if os.path.exists(trg_file_path) == True:
+                                print(rs_id, 'уже был ранее обработан')
                                 continue
                         
                         #Запрос к Ensembl REST API, получение
                         #списка словарей с выходными данными.
                         linked_snps_n_specs = query_to_ens(fil_url_templ, rs_id)
                         
-                        #Если полученный список - пустой, то соответствующий
-                        #ему конечный файл создаваться не будет.
                         #Если вместо списка выдаётся словарь, то этот словарь -
                         #исключительно с сообщением о неправильном refSNPID.
-                        #В обоих случаях переходим к следующей строке.
-                        if linked_snps_n_specs == []:
-                                continue
+                        #В редких случаях эта ошибка вылезает просто так.
+                        #Однократно дублируем запрос, чтобы
+                        #убедиться в невалидности идентификатора.
+                        #При повторном появлении словаря
+                        #переходим к следующей строке.
                         if type(linked_snps_n_specs).__name__ == 'dict':
-                                print(rs_id, '- невалидный идентификатор')
+                                print(f'Возможно, {rs_id} - невалидный идентификатор. Проверка:')
+                                linked_snps_n_specs = query_to_ens(fil_url_templ, rs_id)
+                                if type(linked_snps_n_specs).__name__ == 'dict':
+                                        print(rs_id, '- невалидный идентификатор')
+                                        continue
+                                
+                        #Если получился список, но пустой, то соответствующий
+                        #ему конечный файл создаваться не будет.
+                        #Переходим к обработке следующей строки.
+                        if linked_snps_n_specs == []:
+                                print(f'SNPs в LD ({ld_measure} ≥ {ld_value}) с {rs_id} не найдены')
                                 continue
                         
                         #Опциональное дополнение списка словарей элементом,
