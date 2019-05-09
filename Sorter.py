@@ -1,7 +1,7 @@
 print('''
 Python3-скрипт, сортирующий таблицу по указанным пользователем столбцам.
-Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V3.2.
+Автор: Платон Быкадоров (platon.work@gmail.com), 2018-2019.
+Версия: V3.3.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -121,7 +121,9 @@ def cell_split(cell, sort_rule, cur_start_index = 0):
 import sys, os, re
 
 src_dir_path = input('Путь к папке с исходными файлами: ')
+
 trg_dir_path = input('\nПуть к папке для конечных файлов: ')
+
 num_of_headers = input('''\nКоличество не обрабатываемых строк
 в начале каждой исходной таблицы
 (игнорирование ввода ==> хэдеров/шапок в таблицах нет)
@@ -130,10 +132,12 @@ if num_of_headers == '':
         num_of_headers = 0
 else:
         num_of_headers = int(num_of_headers)
+        
 col_numbers = input('''\nНомер одного или номера нескольких
 определяющих сортировку столбцов
 (через пробел)
 (игнорирование ввода ==> сортировка по всем столбцам): ''').split()
+
 reverse_val = input('''\nСортировать в обратном порядке (по убыванию)?
 (игнорирование ввода ==> сортировать по возрастанию)
 [yes(|y)|no(|n|<enter>)]: ''')
@@ -145,9 +149,12 @@ else:
         print('\nОшибка. Вы не задали порядок сортировки')
         sys.exit()
         
+print('\n')
+
 src_file_names = os.listdir(src_dir_path)
 for src_file_name in src_file_names:
         with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
+                print('Производится сортировка', src_file_name)
                 
                 #Формирование списка хэдеров.
                 #Курсор смещается к началу основной части таблицы.
