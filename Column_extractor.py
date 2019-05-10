@@ -1,7 +1,8 @@
 print('''
-Этот Python3-скрипт копирует в отдельные файлы необходимые пользователю столбцы.
-Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2018.
-Версия: V2.4.
+Этот Python3-скрипт копирует в отдельные
+файлы необходимые пользователю столбцы.
+Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2019.
+Версия: V3.0.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -21,10 +22,12 @@ rs12897751	IGHG3
 rs3020575	IGHG3
 ''')
 
-import os
+import sys, os
 
-src_dir_path = input('Путь к папке с исходными файлами: ')
+src_dir_path = input('Путь к папке с исходными tab-файлами: ')
+
 trg_dir_path = input('\nПуть к папке для конечных файлов: ')
+
 num_of_headers = input('''\nКоличество не обрабатываемых строк
 в начале каждой исходной таблицы
 (совет: табулированную шапку к ним не причисляйте)
@@ -34,21 +37,38 @@ if num_of_headers == '':
         num_of_headers = 0
 else:
         num_of_headers = int(num_of_headers)
-col_numbers = [int(col_number) for col_number in input('''\nНомер одного или номера
-нескольких экстрагируемых столбцов
+        
+mode = input('''\nСкопировать выбранные столбцы или
+скопировать все столбцы кроме выбранных?
+[include(|i)|exclude(|e)]: ''')
+if mode == 'include' or mode == 'i':
+        act = 'копируемых'
+elif mode == 'exclude' or mode == 'e':
+        act = 'исключаемых'
+else:
+        print('\nОшибка. Вы не определили действие')
+        sys.exit()
+        
+indices = [int(col_number) - 1 for col_number in input(f'''\nНомер одного или номера
+нескольких {act} столбцов
 (через пробел): ''').split()]
+if act == 'исключаемых':
+        indices.sort()
+
+print('\n')
 
 src_file_names = os.listdir(src_dir_path)
 for src_file_name in src_file_names:
-        print('Обрабатывается файл', src_file_name)
+        if src_file_name.startswith('.~lock.'):
+                continue
         with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
+                print('Обрабатывается файл', src_file_name)
                 
                 #Конструируемое ниже имя конечного файла
                 #будет содержать номера выделенных столбцов.
                 src_file_base = '.'.join(src_file_name.split('.')[:-1])
-                src_file_ext = src_file_name.split('.')[-1]
-                trg_file_name = src_file_base + '_col' + \
-                                '+'.join([str(col_number) for col_number in col_numbers]) + '.' + src_file_ext
+                src_file_ext = '.' + src_file_name.split('.')[-1]
+                trg_file_name = src_file_base + '_extr' + src_file_ext
                 
                 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                         
@@ -64,11 +84,32 @@ for src_file_name in src_file_names:
                         #работа с основной частью таблицы.
                         for line in src_file_opened:
                                 src_row = line.split('\t')
-                                
-                                #Формирование списка, содержащего ячейки
-                                #только запрашиваемых столбцов.
-                                trg_row = [src_row[col_number - 1] for col_number in col_numbers]
-                                
+                                if act == 'копируемых':
+                                        
+                                        #Формирование списка, содержащего ячейки
+                                        #только запрашиваемых столбцов.
+                                        trg_row = [src_row[index] for index in indices]
+                                else:
+
+                                        #Создание списка, наоборот,
+                                        #без ячеек заданных столбцов.
+                                        #Список индексов игнорируемых ячеек
+                                        #должен быть отсортированным.
+                                        #Алгоритм таков, что исходный
+                                        #список будет как бы разрезаться
+                                        #исключаемыми и него элементами.
+                                        #Если удаляемым элементом
+                                        #окажется последний, то при
+                                        #попытке отмерить от него крайний
+                                        #"отрезок" IndexError не возникнет.
+                                        #В качестве этого отрезка
+                                        #вернётся пустой список.
+                                        trg_row, prev_index = [], -1
+                                        for index in indices:
+                                                trg_row += src_row[prev_index + 1:index]
+                                                prev_index = index
+                                        trg_row += src_row[prev_index + 1:]
+                                        
                                 #Прописывание результатов в конечный файл.
                                 if trg_row[-1].find('\n') == -1:
                                         trg_row[-1] += '\n'
