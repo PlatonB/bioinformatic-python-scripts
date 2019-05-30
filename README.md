@@ -137,5 +137,5 @@ https://www.python.org/ftp/python/3.7.0/python-3.7.0-amd64.exe
 
 # Другие проекты.
 ## [LD-tools](https://github.com/PlatonB/ld-tools).
-- Формирование по значениям LD для пар SNP тепловых карт или таблиц.
-- WIP: Поиск SNPs в LD с запрашиваемыми.
+- Формирование и визуализация матриц значений LD для пар SNP.
+- Поиск SNPs в LD с запрашиваемыми.
