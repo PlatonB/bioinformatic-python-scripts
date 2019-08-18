@@ -1,7 +1,7 @@
 print('''
 Python3-скрипт, сортирующий таблицу по указанным пользователем столбцам.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2018-2019.
-Версия: V3.3.
+Версия: V3.4.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -141,9 +141,9 @@ col_numbers = input('''\nНомер одного или номера неско�
 reverse_val = input('''\nСортировать в обратном порядке (по убыванию)?
 (игнорирование ввода ==> сортировать по возрастанию)
 [yes(|y)|no(|n|<enter>)]: ''')
-if reverse_val == 'yes' or reverse_val == 'y':
+if reverse_val in ['yes', 'y']:
         reverse_val = True
-elif reverse_val == 'no' or reverse_val == 'n' or reverse_val == '':
+elif reverse_val in ['no', 'n', '']:
         reverse_val = False
 else:
         print('\nОшибка. Вы не задали порядок сортировки')
@@ -153,8 +153,11 @@ print('\n')
 
 src_file_names = os.listdir(src_dir_path)
 for src_file_name in src_file_names:
+        if src_file_name.startswith('.~lock.'):
+                continue
         with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
-                print('Производится сортировка', src_file_name)
+                
+                print(f'Производится сортировка {src_file_name}')
                 
                 #Формирование списка хэдеров.
                 #Курсор смещается к началу основной части таблицы.
