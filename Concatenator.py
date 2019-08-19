@@ -1,7 +1,7 @@
 print('''
 Python3-скрипт, объединяющий тексты в один файл.
-Автор: Платон Быкадоров (platon.work@gmail.com), 2018.
-Версия: V2.0.
+Автор: Платон Быкадоров (platon.work@gmail.com), 2018-2019.
+Версия: V2.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -28,11 +28,13 @@ def write_into_file(file_or_dataset, trg_file_opened):
                 if line.find('\n') == -1:
                         line += '\n'
                 trg_file_opened.write(line)
+                
+import sys, os, copy
 
-import sys, os
+src_dir_path = os.path.normpath(input('Путь к папке с исходными файлами: '))
 
-src_dir_path = input('Путь к папке с исходными файлами: ')
 trg_dir_path = input('\nПуть к папке для конкатенированного файла: ')
+
 num_of_headers = input('''\nКоличество хэдеров/шапок в начале каждого текста
 (игнорирование ввода ==> все строки без
 исключения пойдут в конкатенированный текст)
@@ -41,11 +43,11 @@ if num_of_headers == '':
         num_of_headers = 0
 else:
         num_of_headers = int(num_of_headers)
+        
 kill_repeats = input('''\nУдалять копии строк?
 (игнорирование ввода ==> не удалять)
 [yes(|y)|no(|n|<enter>)]: ''')
-if kill_repeats != 'yes' and kill_repeats != 'y' and kill_repeats != 'no' \
-   and kill_repeats != 'n' and kill_repeats != '':
+if kill_repeats not in ['yes', 'y', 'no', 'n', '']:
         print(f'{kill_repeats} - недопустимая опция')
         sys.exit()
         
@@ -58,7 +60,7 @@ if len(src_file_names) < 2:
         print(f'''В исходной папке {src_dir_path} менее
 двух файлов. Конкатенация невозможна.''')
         sys.exit()
-
+        
 #В значительной части скриптов репозитория
 #результаты работы размещаются в файлы,
 #соответствующие каждому исходному файлу.
@@ -91,13 +93,13 @@ with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                                 #попытки создания единого хэдера сворачиваются.
                                 if cur_headers != prev_headers:
                                         break
-
+                                
                                 #Если очередные хэдеры не отличаются от
                                 #найденных ранее, то определение возможности
                                 #размещения общего хэдера может быть продолжено.
                                 else:
-                                        prev_headers = cur_headers
-
+                                        prev_headers = copy.deepcopy(cur_headers)
+                                        
                 #Хэдеры (или наборы хэдеров) от
                 #текста к тексту не меняются.
                 #Значит, начинаем с них конечный файл.
@@ -122,13 +124,13 @@ with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                                 
                         #Если пользователь выбрал не уничтожать повторы, то
                         #строки сразу пропишутся в файл, без накопления в массиве.
-                        if kill_repeats == 'no' or kill_repeats == 'n' or kill_repeats == '':
+                        if kill_repeats in ['no', 'n', '']:
                                 write_into_file(src_file_opened, trg_file_opened)
                                 
                         #Если же пользователь предпочёл повторы убрать,
                         #то придётся задействовать оперативную память,
                         #сохранив строки всех текстов во множество.
-                        elif kill_repeats == 'yes' or kill_repeats == 'y':
+                        elif kill_repeats in ['yes', 'y']:
                                 data_wo_repeats |= set(line for line in src_file_opened)
                                 
         #Прописывание строк конкатенированного текста,
