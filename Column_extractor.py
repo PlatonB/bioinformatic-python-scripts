@@ -2,7 +2,7 @@ print('''
 Этот Python3-скрипт копирует в отдельные
 файлы необходимые пользователю столбцы.
 Автор: Платон Быкадоров (platon.work@gmail.com), 2017-2019.
-Версия: V3.0.
+Версия: V3.1.
 Лицензия: GNU General Public License version 3.
 Поддержать проект: https://money.yandex.ru/to/41001832285976
 
@@ -41,9 +41,9 @@ else:
 mode = input('''\nСкопировать выбранные столбцы или
 скопировать все столбцы кроме выбранных?
 [include(|i)|exclude(|e)]: ''')
-if mode == 'include' or mode == 'i':
+if mode in ['include', 'i']:
         act = 'копируемых'
-elif mode == 'exclude' or mode == 'e':
+elif mode in ['exclude', 'e']:
         act = 'исключаемых'
 else:
         print('\nОшибка. Вы не определили действие')
@@ -54,7 +54,7 @@ indices = [int(col_number) - 1 for col_number in input(f'''\nНомер одно
 (через пробел): ''').split()]
 if act == 'исключаемых':
         indices.sort()
-
+        
 print('\n')
 
 src_file_names = os.listdir(src_dir_path)
@@ -62,35 +62,40 @@ for src_file_name in src_file_names:
         if src_file_name.startswith('.~lock.'):
                 continue
         with open(os.path.join(src_dir_path, src_file_name)) as src_file_opened:
+                
                 print('Обрабатывается файл', src_file_name)
                 
-                #Конструируемое ниже имя конечного файла
-                #будет содержать номера выделенных столбцов.
+                #Создание имени конечного файла.
                 src_file_base = '.'.join(src_file_name.split('.')[:-1])
                 src_file_ext = '.' + src_file_name.split('.')[-1]
                 trg_file_name = src_file_base + '_extr' + src_file_ext
                 
+                #Открытие конечного файла на запись.
                 with open(os.path.join(trg_dir_path, trg_file_name), 'w') as trg_file_opened:
                         
-                        #Формирование списка хэдеров и добавление хэдеров в конечный файл.
-                        #Курсор смещается к началу основной части таблицы.
-                        headers = [src_file_opened.readline() for header_index in range(num_of_headers)]
+                        #Формирование списка
+                        #хэдеров и добавление
+                        #хэдеров в конечный файл.
+                        #Курсор смещается к началу
+                        #основной части таблицы.
+                        headers = [src_file_opened.readline().split('\n')[0] \
+                                   for header_index in range(num_of_headers)]
                         for header in headers:
-                                if header.find('\n') == -1:
-                                        header += '\n'
-                                trg_file_opened.write(header)
+                                trg_file_opened.write(header + '\n')
                                 
-                        #Эффективная с точки зрения использования RAM
-                        #работа с основной частью таблицы.
+                        #Эффективная с точки зрения использования
+                        #RAM работа с основной частью таблицы.
                         for line in src_file_opened:
-                                src_row = line.split('\t')
+                                src_row = line.split('\n')[0].split('\t')
+                                
                                 if act == 'копируемых':
                                         
                                         #Формирование списка, содержащего ячейки
                                         #только запрашиваемых столбцов.
                                         trg_row = [src_row[index] for index in indices]
+                                        
                                 else:
-
+                                        
                                         #Создание списка, наоборот,
                                         #без ячеек заданных столбцов.
                                         #Список индексов игнорируемых ячеек
@@ -111,6 +116,4 @@ for src_file_name in src_file_names:
                                         trg_row += src_row[prev_index + 1:]
                                         
                                 #Прописывание результатов в конечный файл.
-                                if trg_row[-1].find('\n') == -1:
-                                        trg_row[-1] += '\n'
-                                trg_file_opened.write('\t'.join(trg_row))
+                                trg_file_opened.write('\t'.join(trg_row) + '\n')
