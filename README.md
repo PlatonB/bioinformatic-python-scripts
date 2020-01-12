@@ -47,18 +47,18 @@
 ## Windows/[ReactOS](https://www.reactos.org/).
 IDLE входит в пакет Python. Скачать Python для Windows или ReactOS:
 
-https://www.python.org/ftp/python/3.7.0/python-3.7.0-amd64.exe
+https://www.python.org/ftp/python/3.8.1/python-3.8.1-amd64.exe
 
 (ссылка будет периодически вручную обновляться)
 
 ## Fedora Linux.
-Обзор → Показать приложения → Утилиты → [Терминал](https://github.com/PlatonB/index-tools#важно-знать-о-командной-строке-linux). Введите команду:
+Обзор → Показать приложения → Утилиты → [Терминал](https://github.com/PlatonB/ngs-pipelines#преодолеваем-страх-командной-строки-linux). Введите команду:
 
 `sudo dnf install python3-idle`
 
-## Ubuntu Linux/[elementary OS](https://elementary.io/ru/)/Linux Mint.
+## Ubuntu Linux/[elementary OS](https://elementary.io/ru/)/KDE neon/Linux Mint.
 
-В программе [Терминал](https://github.com/PlatonB/index-tools#важно-знать-о-командной-строке-linux) введите такую команду:
+В программе [Терминал](https://github.com/PlatonB/ngs-pipelines#преодолеваем-страх-командной-строки-linux) введите такую команду:
 
 `sudo apt install idle-python3.6` (3.7, ...)
 
